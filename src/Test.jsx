@@ -1,56 +1,64 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useState } from "react";
 
-export default function Test() {
+const GraphGenerator = () => {
+  const [viewBox, setViewBox] = useState({ x: 0, y: 0, width: 100, height: 100 });
 
+  // Function to handle zooming
+  const zoom = (scaleFactor) => {
+    const newWidth = viewBox.width / scaleFactor;
+    const newHeight = viewBox.height / scaleFactor;
+    const newX = viewBox.x - (newWidth - viewBox.width) / 2;
+    const newY = viewBox.y - (newHeight - viewBox.height) / 2;
 
+    setViewBox({
+      x: newX,
+      y: newY,
+      width: newWidth,
+      height: newHeight,
+    });
+  };
 
-    const [divWidth, setDivWidth] = useState(300); // Initial width of the div
-    const divRef = useRef(null);
+  return (
+    <div style={{ textAlign: "center" }}>
+      <h2>Graph Generator</h2>
 
-    // Function to increase the width of the div
-    const increaseWidth = () => {
-        setDivWidth((prevWidth) => prevWidth + 300); // Increment width by 300px
-    };
+      {/* Scrollable Container */}
+      <div
+        style={{
+          width: "500px",
+          height: "500px",
+          border: "1px solid black",
+          overflow: "scroll",
+          margin: "0 auto",
+        }}
+      >
+        <svg
+          width="2000" // Large enough to ensure the graph is fully visible
+          height="2000"
+          viewBox={`${viewBox.x} ${viewBox.y} ${viewBox.width} ${viewBox.height}`}
+        >
+          {/* Example Axis */}
+          <line x1="0" y1="100" x2="200" y2="100" stroke="gray" strokeWidth="1" />
+          <line x1="100" y1="0" x2="100" y2="200" stroke="gray" strokeWidth="1" />
 
-    useEffect(() => {
-        if (divRef.current) {
-            const div = divRef.current;
+          {/* Example Graph Line */}
+          <path
+            d="M 10 180 C 50 150, 90 50, 190 10" // Ensure the path fits into the graph
+            stroke="blue"
+            fill="transparent"
+            strokeWidth="2"
+          />
+        </svg>
+      </div>
 
-            // Automatically scroll to the rightmost side when the width increases
-            div.scrollTo({
-                left: div.scrollWidth/2, // Scroll to the end of the horizontal scroll
-                behavior: "smooth", // Smooth scrolling for better UX
-            });
-        }
-    }, [divWidth]);
+      <div style={{ marginTop: "20px" }}>
+        <button onClick={() => zoom(1.2)}>Zoom In</button>
+        <button onClick={() => zoom(1 / 1.2)} style={{ marginLeft: "10px" }}>
+          Zoom Out
+        </button>
+      </div>
+    </div>
+  );
+};
 
-
-
-    return (
-        <div>
-            <button
-                onClick={increaseWidth}
-                className="mb-4 px-4 py-2 bg-blue-500 text-white rounded"
-            >
-                Increase Width
-            </button>
-            <div
-                ref={divRef}
-                className="overflow-x-auto overflow-y-auto h-[300px] border border-gray-300"
-                style={{ width: "100%" }}
-            >
-                <div
-                    className="h-[300px] bg-gradient-to-r from-blue-500 to-green-500"
-                    style={{ width: `${divWidth}px` }}
-                >
-                    <span className="text-white text-2xl font-bold flex justify-center items-center h-full">
-                        Scrollable Content
-                    </span>
-                </div>
-            </div>
-            <div>
-                EMRAN
-            </div>
-        </div>
-    )
-}
+export default GraphGenerator;
