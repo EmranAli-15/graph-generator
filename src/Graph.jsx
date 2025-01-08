@@ -1,42 +1,39 @@
 import { useEffect, useState } from "react";
+import { AiFillPlusCircle, AiFillMinusCircle } from "react-icons/ai";
+
 
 const Graph = () => {
-    const [h, setH] = useState(window.innerHeight);
-    const [w, setW] = useState(window.innerWidth);
+    const [graphHeight, setGraphHeight] = useState(window.innerWidth);
+    const [graphWidth, setGraphWidth] = useState(window.innerWidth);
 
     const [fixedH, setFixedH] = useState(window.innerHeight);
     const [fixedW, setFixedW] = useState(window.innerWidth);
 
+    const [afterZoom, setAfterZoom] = useState(100);
+
     const [dots, setDots] = useState([]);
 
-    const centerX = w / 2;
-    const centerY = h / 2;
+    const centerX = graphWidth / 2;
+    const centerY = graphHeight / 2;
 
     const points = dots
         .map(point => `${point.x + centerX},${point.y + centerY}`)
         .join(" ");
 
-    const [myData, setMyData] = useState([])
+    const [myData, setMyData] = useState([]);
 
 
-    const [xS, setXs] = useState("");
-    const [yS, setYs] = useState("");
+    const [xAxis, setXAxis] = useState("");
+    const [yAxis, setYAxis] = useState("");
 
     const handleNewData = () => {
-        const obj = { x: 4 * xS, y: 4 * (0 - yS) };
+        const obj = { x: 4 * xAxis, y: 4 * (0 - yAxis) };
         setDots([...dots, obj]);
 
-        const myObj = { x: (0 + xS), y: (0 - yS) };
+        const myObj = { x: (0 + xAxis), y: (0 - yAxis) };
         setMyData([...myData, myObj])
-        setXs("");
-        setYs("");
-        // if (xS * 4 > w / 2) {
-        //     setW((w) => w + xS * 4);
-        // }
-        // if (yS * 4 > h / 2) {
-        //     setH((h) => h + yS * 4);
-        // }
-
+        setXAxis("");
+        setYAxis("");
     };
 
     const handleBack = () => {
@@ -49,9 +46,46 @@ const Graph = () => {
         setMyData(myOldArr)
     };
 
-    const graphLines = [
+    const [graphLines, setGraphLines] = useState([
         40, 80, 120, 160, 200, 240, 280, 320, 360, 400, 440, 480, 520, 560, 600, 640, 680, 720, 760
-    ];
+    ])
+
+
+
+
+    const [viewBox, setViewBox] = useState({ x: 0, y: 0, width: graphWidth, height: graphHeight });
+
+    // Function to handle zooming
+    const handleGraphSize = (scaleFactor) => {
+        if (scaleFactor > 1) {
+            const newWidth = viewBox.width - 40;
+            const newHeight = viewBox.height - 40;
+
+            setGraphHeight((graphHeight) => graphHeight - 40)
+            setGraphWidth((graphWidth) => graphWidth - 40)
+
+            setViewBox({
+                width: newWidth,
+                height: newHeight,
+            });
+        } else {
+            const newWidth = viewBox.width + 40;
+            const newHeight = viewBox.height + 40;
+
+            setGraphHeight((graphHeight) => graphHeight + 40)
+            setGraphWidth((graphWidth) => graphWidth + 40)
+
+            if ((graphWidth / 2) > graphLines[graphLines.length - 1]) {
+                const newLine = (graphLines[graphLines.length - 1]) + 40;
+                setGraphLines([...graphLines, newLine])
+            }
+
+            setViewBox({
+                width: newWidth,
+                height: newHeight,
+            });
+        }
+    };
 
 
     // Setting graph size
@@ -59,103 +93,61 @@ const Graph = () => {
         if (window.innerWidth > 500) {
             setFixedH(700);
             setFixedW(700);
-            setH(700)
-            setW(700)
+            setGraphHeight(700)
+            setGraphWidth(700)
+            viewBox.width = 700;
+            viewBox.height = 700;
         };
-        if (window.innerHeight > w) {
-            setFixedH(w);
-            setH(w);
+        if (window.innerHeight > graphWidth) {
+            setFixedH(graphWidth);
+            setGraphHeight(graphWidth);
         };
     }, []);
 
 
 
-    const [stayGraphCenter, setStayGraphCenter] = useState(0);
-    const [viewBox, setViewBox] = useState({ x: 0, y: 0, width: 700, height: 700 });
-
-    // Function to handle zooming
-    const zoom = (scaleFactor) => {
-        if (scaleFactor > 1) {
-            const newWidth = viewBox.width + 30;
-            const newHeight = viewBox.height + 30;
-            const newX = viewBox.x - (newWidth - viewBox.width) + 30;
-            const newY = viewBox.y - (newHeight - viewBox.height) + 30;
-
-            const padding = 700 - newWidth;
-            setStayGraphCenter(padding / 2);
-            console.log(padding)
-
-            setViewBox({
-                x: newX,
-                y: newY,
-                width: newWidth,
-                height: newHeight,
-            });
-        } else {
-            const newWidth = viewBox.width - 30;
-            const newHeight = viewBox.height - 30;
-            const newX = viewBox.x - (newWidth - viewBox.width) - 30;
-            const newY = viewBox.y - (newHeight - viewBox.height) - 30;
-
-            const padding = 700 - newWidth;
-            setStayGraphCenter(padding / 2);
-            console.log(padding)
-
-            setViewBox({
-                x: newX,
-                y: newY,
-                width: newWidth,
-                height: newHeight,
-            });
-        }
-    };
-
     return (
         <div>
             <div className="lg:flex justify-evenly">
-                <div style={{ height: fixedH + "px", width: fixedW + "px", paddingLeft: stayGraphCenter + "px", paddingTop: stayGraphCenter + "px" }} className="border overflow-auto">
+                <div style={{ height: fixedH + "px", width: fixedW + "px" }} className="border overflow-auto">
                     <svg
-                        viewBox={`${viewBox.x} ${viewBox.y} ${fixedW} ${fixedH}`}
+                        viewBox={`0,0 ${Number(graphWidth)} ${graphHeight}`}
                         height={viewBox.height} width={viewBox.width}
-                    // className={`${isZoom && "scale-[40%] transition-all"} border overflow-auto`}
+                        style={{ scale: afterZoom + "%" }}
                     >
 
                         {/* Middle Line */}
-                        <polyline points={`0,${centerY} ${w},${centerY}`} stroke="black" strokeWidth="2" fill="none" />
-                        <polyline points={`${centerX},0 ${centerX},${h}`} stroke="black" strokeWidth="2" fill="none" />
+                        <polyline points={`0,${centerY} ${graphWidth},${centerY}`} stroke="black" strokeWidth="2" fill="none" />
+                        <polyline points={`${centerX},0 ${centerX},${graphHeight}`} stroke="black" strokeWidth="2" fill="none" />
 
 
-                        {/* Graph Lines start for X axis */}
                         {/* Graph Lines start for X axis */}
                         {
                             graphLines.map(line => {
-                                return <polyline key={line} points={`0,${centerY + line} ${w},${centerY + line}`} stroke="#C0C0C0" strokeWidth="1" fill="none" />
+                                return <polyline key={line} points={`0,${centerY + line} ${graphWidth},${centerY + line}`} stroke="#C0C0C0" strokeWidth="1" fill="none" />
                             })
                         }
                         {
                             graphLines.map(line => {
-                                return <polyline key={line} points={`0,${centerY - line} ${w},${centerY - line}`} stroke="#C0C0C0" strokeWidth="1" fill="none" />
+                                return <polyline key={line} points={`0,${centerY - line} ${graphWidth},${centerY - line}`} stroke="#C0C0C0" strokeWidth="1" fill="none" />
                             })
                         }
-                        {/* Graph Lines end for X axis */}
                         {/* Graph Lines end for X axis */}
 
 
 
 
                         {/* Graph Lines start for Y axis */}
-                        {/* Graph Lines start for Y axis */}
                         {
                             graphLines.map(line => {
-                                return <polyline key={line} points={`${centerX + line},0 ${centerX + line},${h}`} stroke="#C0C0C0" strokeWidth="1" fill="none" />
+                                return <polyline key={line} points={`${centerX + line},0 ${centerX + line},${graphHeight}`} stroke="#C0C0C0" strokeWidth="1" fill="none" />
                             })
                         }
                         {
                             graphLines.map(line => {
-                                return <polyline key={line} points={`${centerX - line},0 ${centerX - line},${h}`} stroke="#C0C0C0" strokeWidth="1" fill="none" />
+                                return <polyline key={line} points={`${centerX - line},0 ${centerX - line},${graphHeight}`} stroke="#C0C0C0" strokeWidth="1" fill="none" />
                             })
                         }
-                        {/* Graph Lines end for Y axis */}
                         {/* Graph Lines end for Y axis */}
 
 
@@ -176,23 +168,40 @@ const Graph = () => {
 
 
                 <div>
-                    <div style={{ marginTop: "20px" }}>
-                        <button onClick={() => zoom(1.2)}>Zoom In</button>
-                        <button onClick={() => zoom(0.8)} style={{ marginLeft: "10px" }}>
-                            Zoom Out
-                        </button>
-                    </div>
+                    <div className="flex items-center justify-evenly">
+                        <div className="flex items-center justify-center gap-x-2 my-4">
+                            <button onClick={() => handleGraphSize(1.2)}>
+                                <AiFillMinusCircle className="size-8"></AiFillMinusCircle>
+                            </button>
+                            <span className="py-1 px-3 rounded-md bg-red-500 text-white">Graph Size</span>
+                            <button onClick={() => handleGraphSize(0.8)}>
+                                <AiFillPlusCircle className="size-8"></AiFillPlusCircle>
+                            </button>
+                        </div>
 
-                    <div>
-                        <div className="flex justify-evenly mb-2">
-                            <input value={xS} onChange={(e) => setXs(Number(e.target.value))} type="number" placeholder="X" className="border outline-none px-2 h-10 rounded-md w-[150px]" />
-                            <input value={yS} onChange={(e) => setYs(Number(e.target.value))} type="number" placeholder="Y" className="border outline-none px-2 h-10 rounded-md w-[150px]" />
+                        <div className="flex items-center justify-center gap-x-2 my-4">
+                            <button onClick={() => setAfterZoom(afterZoom - 10)}>
+                                <AiFillMinusCircle className="size-8"></AiFillMinusCircle>
+                            </button>
+                            <span className="py-1 px-3 rounded-md bg-red-500 text-white">Zoom</span>
+                            <button onClick={() => setAfterZoom(afterZoom + 10)}>
+                                <AiFillPlusCircle className="size-8"></AiFillPlusCircle>
+                            </button>
                         </div>
                     </div>
 
-                    <div className="flex justify-center gap-x-3">
-                        <button onClick={handleBack} className="btn btn-sm btn-outline btn-warning">back</button>
-                        <button onClick={handleNewData} className="btn btn-sm btn-info">Add</button>
+                    <div>
+                        <div>
+                            <div className="flex justify-evenly mb-2">
+                                <input value={xAxis} onChange={(e) => setXAxis(Number(e.target.value))} type="number" placeholder="X" className="border outline-none px-2 h-10 rounded-md w-[150px]" />
+                                <input value={yAxis} onChange={(e) => setYAxis(Number(e.target.value))} type="number" placeholder="Y" className="border outline-none px-2 h-10 rounded-md w-[150px]" />
+                            </div>
+                        </div>
+
+                        <div className="flex justify-center gap-x-3">
+                            <button onClick={handleBack} className="btn btn-sm btn-outline btn-warning">back</button>
+                            <button onClick={handleNewData} className="btn btn-sm btn-info">Add</button>
+                        </div>
                     </div>
 
 
