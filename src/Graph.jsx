@@ -105,15 +105,14 @@ const Graph = () => {
     }, []);
 
 
-
     return (
-        <div>
-            <div className="lg:flex justify-evenly">
+        <div className="max-w-7xl mx-auto">
+            <div className="sm:flex-col md:flex justify-evenly">
                 <div style={{ height: fixedH + "px", width: fixedW + "px" }} className="border overflow-auto">
                     <svg
                         viewBox={`0,0 ${Number(graphWidth)} ${graphHeight}`}
                         height={viewBox.height} width={viewBox.width}
-                        style={{ scale: afterZoom + "%" }}
+                        style={{ zoom: afterZoom + "%", }}
                     >
 
                         {/* Middle Line */}
@@ -187,14 +186,17 @@ const Graph = () => {
                             <button onClick={() => setAfterZoom(afterZoom + 10)}>
                                 <AiFillPlusCircle className="size-8"></AiFillPlusCircle>
                             </button>
+                            <button onClick={() => setAfterZoom(100)}>
+                                100
+                            </button>
                         </div>
                     </div>
 
                     <div>
                         <div>
                             <div className="flex justify-evenly mb-2">
-                                <input value={xAxis} onChange={(e) => setXAxis(Number(e.target.value))} type="number" placeholder="X" className="border outline-none px-2 h-10 rounded-md w-[150px]" />
-                                <input value={yAxis} onChange={(e) => setYAxis(Number(e.target.value))} type="number" placeholder="Y" className="border outline-none px-2 h-10 rounded-md w-[150px]" />
+                                <input value={xAxis} onChange={(e) => setXAxis(Number(e.target.value))} type="number" placeholder="X" className="border text-black outline-none px-2 h-10 rounded-md w-[150px] bg-gray-200" />
+                                <input value={yAxis} onChange={(e) => setYAxis(Number(e.target.value))} type="number" placeholder="Y" className="border text-black outline-none px-2 h-10 rounded-md w-[150px] bg-gray-200" />
                             </div>
                         </div>
 
@@ -214,7 +216,6 @@ const Graph = () => {
                         })
                     }
                 </div>
-
             </div>
         </div>
     );
