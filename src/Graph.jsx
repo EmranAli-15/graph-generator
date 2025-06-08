@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { AiFillPlusCircle, AiFillMinusCircle } from "react-icons/ai";
+import { BsDash, BsPlusLg } from "react-icons/bs";
 
 
 const Graph = () => {
@@ -11,7 +12,14 @@ const Graph = () => {
 
     const [afterZoom, setAfterZoom] = useState(100);
 
-    const [dots, setDots] = useState([]);
+    const [dots, setDots] = useState([
+        { x: 0 * 4, y: -0 * 4 },
+        { x: 10 * 4, y: -20 * 4 },
+        { x: 20 * 4, y: -30 * 4 },
+        { x: 40 * 4, y: -35 * 4 },
+        { x: 60 * 4, y: -35 * 4 },
+        { x: 70 * 4, y: -30 * 4 },
+    ]);
 
     const centerX = graphWidth / 2;
     const centerY = graphHeight / 2;
@@ -91,12 +99,12 @@ const Graph = () => {
     // Setting graph size
     useEffect(() => {
         if (window.innerWidth > 500) {
-            setFixedH(700);
-            setFixedW(700);
-            setGraphHeight(700)
-            setGraphWidth(700)
-            viewBox.width = 700;
-            viewBox.height = 700;
+            setFixedH(window.innerHeight);
+            setFixedW(window.innerWidth - (window.innerWidth / 3));
+            setGraphHeight(window.innerHeight)
+            setGraphWidth(window.innerWidth - (window.innerWidth / 3))
+            viewBox.width = window.innerWidth - (window.innerWidth / 3);
+            viewBox.height = window.innerHeight;
         };
         if (window.innerHeight > graphWidth) {
             setFixedH(graphWidth);
@@ -106,29 +114,31 @@ const Graph = () => {
 
 
     return (
-        <div className="max-w-7xl mx-auto">
-            <div className="sm:flex-col md:flex justify-between">
-                <section style={{ height: fixedH + "px", width: fixedW + "px" }} className="border overflow-auto">
+        <div className="">
+            <div className="flex flex-col md:flex-row justify-between gap-x-4">
+
+                {/* style={{ height: fixedH + "px", width: fixedW + "px" }} */}
+                <section style={{ height: fixedH + "px", width: fixedW + "px" }} className="border overflow-auto md:w-2/3">
                     <svg
                         viewBox={`0,0 ${Number(graphWidth)} ${graphHeight}`}
                         height={viewBox.height} width={viewBox.width}
                         style={{ zoom: afterZoom + "%", }}
                     >
 
-                        {/* Middle Line */}
-                        <polyline points={`0,${centerY} ${graphWidth},${centerY}`} stroke="black" strokeWidth="2" fill="none" />
-                        <polyline points={`${centerX},0 ${centerX},${graphHeight}`} stroke="black" strokeWidth="2" fill="none" />
+
 
 
                         {/* Graph Lines start for X axis */}
                         {
                             graphLines.map(line => {
-                                return <polyline key={line} points={`0,${centerY + line} ${graphWidth},${centerY + line}`} stroke="#C0C0C0" strokeWidth="1" fill="none" />
+                                const x = line % 80;
+                                return <polyline key={line} points={`0,${centerY + line} ${graphWidth},${centerY + line}`} stroke={!x ? "#C0C0C0" : "#819A91"} strokeWidth="1" fill="none" />
                             })
                         }
                         {
                             graphLines.map(line => {
-                                return <polyline key={line} points={`0,${centerY - line} ${graphWidth},${centerY - line}`} stroke="#C0C0C0" strokeWidth="1" fill="none" />
+                                const x = line % 80;
+                                return <polyline key={line} points={`0,${centerY - line} ${graphWidth},${centerY - line}`} stroke={!x ? "#C0C0C0" : "#819A91"} strokeWidth="1" fill="none" />
                             })
                         }
                         {/* Graph Lines end for X axis */}
@@ -139,19 +149,27 @@ const Graph = () => {
                         {/* Graph Lines start for Y axis */}
                         {
                             graphLines.map(line => {
-                                return <polyline key={line} points={`${centerX + line},0 ${centerX + line},${graphHeight}`} stroke="#C0C0C0" strokeWidth="1" fill="none" />
+                                const x = line % 80;
+                                return <polyline key={line} points={`${centerX + line},0 ${centerX + line},${graphHeight}`} stroke={!x ? "#C0C0C0" : "#819A91"} strokeWidth="1" fill="none" />
                             })
                         }
                         {
                             graphLines.map(line => {
-                                return <polyline key={line} points={`${centerX - line},0 ${centerX - line},${graphHeight}`} stroke="#C0C0C0" strokeWidth="1" fill="none" />
+                                const x = line % 80;
+                                return <polyline key={line} points={`${centerX - line},0 ${centerX - line},${graphHeight}`} stroke={!x ? "#C0C0C0" : "#819A91"} strokeWidth="1" fill="none" />
                             })
                         }
                         {/* Graph Lines end for Y axis */}
 
 
+
+                        {/* Middle Line */}
+                        <polyline points={`0,${centerY} ${graphWidth},${centerY}`} stroke="#f97316" strokeWidth="2" fill="none" />
+                        <polyline points={`${centerX},0 ${centerX},${graphHeight}`} stroke="#f97316" strokeWidth="2" fill="none" />
+
+
                         {/* Actual Graph */}
-                        <polyline points={points} stroke="blue" strokeWidth="2" fill="none" />
+                        <polyline points={points} stroke="#F6DC43" strokeWidth="2" fill="#00000060" />
 
 
                         {/* Dot For Point */}
@@ -166,25 +184,33 @@ const Graph = () => {
 
 
 
-                <section className="md:w-1/3 px-2 md:px-0">
+                <section className="md:w-1/3 px-5">
                     <div className="flex items-center justify-between mt-4">
-                        <div className="flex items-center justify-center gap-x-2">
-                            <button onClick={() => handleGraphSize(1.2)}>
-                                <AiFillMinusCircle className="size-8 fill-red-600"></AiFillMinusCircle>
+                        <div className="flex items-center justify-center text-white">
+                            <button
+                                className="bg-orange-500 flex items-center justify-center py-2 w-6 border-r outline-none rounded-l-md active:scale-90"
+                                onClick={() => handleGraphSize(1.2)}>
+                                <BsDash />
                             </button>
-                            <span className="py-1 px-3 rounded-md bg-orange-500 text-white">Graph</span>
-                            <button onClick={() => handleGraphSize(0.8)}>
-                                <AiFillPlusCircle className="size-8 fill-green-600"></AiFillPlusCircle>
+                            <span className="py-1 px-3 bg-orange-500">Graph</span>
+                            <button
+                                className="bg-orange-500 flex justify-center items-center py-2 w-6 border-l outline-none rounded-r-md active:scale-90"
+                                onClick={() => handleGraphSize(0.8)}>
+                                <BsPlusLg />
                             </button>
                         </div>
 
-                        <div className="flex items-center justify-center gap-x-2">
-                            <button onClick={() => setAfterZoom(afterZoom - 10)}>
-                                <AiFillMinusCircle className="size-8 fill-red-600"></AiFillMinusCircle>
+                        <div className="flex items-center justify-center text-white">
+                            <button
+                                className="bg-orange-500 flex items-center justify-center py-2 w-6 border-r outline-none rounded-l-md active:scale-90"
+                                onClick={() => setAfterZoom(afterZoom - 10)}>
+                                <BsDash />
                             </button>
-                            <span className="py-1 px-3 rounded-md bg-orange-500 text-white">Zoom</span>
-                            <button onClick={() => setAfterZoom(afterZoom + 10)}>
-                                <AiFillPlusCircle className="size-8 fill-green-600"></AiFillPlusCircle>
+                            <span className="py-1 px-3 bg-orange-500">Zoom</span>
+                            <button
+                                className="bg-orange-500 flex justify-center items-center py-2 w-6 border-l outline-none rounded-r-md active:scale-90"
+                                onClick={() => setAfterZoom(afterZoom + 10)}>
+                                <BsPlusLg />
                             </button>
                         </div>
                     </div>

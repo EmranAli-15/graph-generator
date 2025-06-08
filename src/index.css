@@ -3,7 +3,11 @@
 @tailwind utilities;
 
 body {
-  background-color: white;
+  background-color: #537D5D;
   min-height: 100vh;
   min-width: 100vw;
 };
+
+::-webkit-scrollbar {
+  width: 0;
+}
