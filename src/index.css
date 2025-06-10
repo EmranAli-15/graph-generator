@@ -15,13 +15,13 @@ body {
 }
 
 .btnLeft {
-  @apply bg-[#00b6ff] border border-[#00b6ff] flex items-center justify-center py-3 w-8 outline-none rounded-l-sm active:scale-90
+  @apply bg-[#00b6ff] border border-[#00b6ff] flex items-center justify-center py-3 w-full outline-none rounded-l-sm active:scale-90
 }
 
 .btnRight {
-  @apply bg-[#00b6ff] border border-[#00b6ff] flex justify-center items-center py-3 w-8 outline-none rounded-r-sm active:scale-90
+  @apply bg-[#00b6ff] border border-[#00b6ff] flex justify-center items-center py-3 w-full outline-none rounded-r-sm active:scale-90
 }
 
 .myBtn {
-  @apply border border-[#00b6ff] rounded-sm text-white font-bold w-[133px] py-2 px-5 active:scale-90
+  @apply border border-[#00b6ff] rounded-sm text-white font-bold w-full py-2 px-5 active:scale-90
 }

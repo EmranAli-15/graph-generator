@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { AiFillPlusCircle, AiFillMinusCircle } from "react-icons/ai";
 import { BsDash, BsPlusLg } from "react-icons/bs";
 
 
@@ -11,7 +10,17 @@ const Graph = () => {
     const [fixedW, setFixedW] = useState(window.innerWidth);
 
     const [afterZoom, setAfterZoom] = useState(100);
+    const [fill, setFill] = useState(true);
 
+    const [xAxis, setXAxis] = useState("");
+    const [yAxis, setYAxis] = useState("");
+
+    const [myData, setMyData] = useState([]);
+    const [graphLines, setGraphLines] = useState([
+        40, 80, 120, 160, 200, 240, 280, 320, 360, 400, 440, 480, 520, 560, 600, 640, 680, 720, 760
+    ])
+
+    const [viewBox, setViewBox] = useState({ x: 0, y: 0, width: graphWidth, height: graphHeight });
     const [dots, setDots] = useState([
         { x: 0 * 4, y: -0 * 4 },
         { x: 10 * 4, y: -20 * 4 },
@@ -28,11 +37,10 @@ const Graph = () => {
         .map(point => `${point.x + centerX},${point.y + centerY}`)
         .join(" ");
 
-    const [myData, setMyData] = useState([]);
 
 
-    const [xAxis, setXAxis] = useState("");
-    const [yAxis, setYAxis] = useState("");
+
+
 
     const handleNewData = () => {
         const obj = { x: 4 * xAxis, y: 4 * (0 - yAxis) };
@@ -54,14 +62,7 @@ const Graph = () => {
         setMyData(myOldArr)
     };
 
-    const [graphLines, setGraphLines] = useState([
-        40, 80, 120, 160, 200, 240, 280, 320, 360, 400, 440, 480, 520, 560, 600, 640, 680, 720, 760
-    ])
 
-
-
-
-    const [viewBox, setViewBox] = useState({ x: 0, y: 0, width: graphWidth, height: graphHeight });
 
     // Function to handle zooming
     const handleGraphSize = (scaleFactor) => {
@@ -169,7 +170,7 @@ const Graph = () => {
 
 
                         {/* Actual Graph */}
-                        <polyline points={points} stroke="#F6DC43" strokeWidth="2" fill="#00000060" />
+                        <polyline points={points} stroke="#F6DC43" strokeWidth="2" fill={fill ? "#00000060" : "none"} />
 
 
                         {/* Dot For Point */}
@@ -185,7 +186,7 @@ const Graph = () => {
 
 
                 <section className="md:w-1/3 p-5">
-                    <div className="flex items-center justify-evenly mt-5">
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-2 mt-5">
                         <div className="flex items-center justify-center text-white">
                             <button
                                 className="btnLeft"
@@ -215,24 +216,22 @@ const Graph = () => {
                         </div>
 
 
-
-                        {/* Back the actual size of zoomed content */}
-                        {/* <div>
-                            <button className="text-sm font-semibold size-7 rounded-full text-center text-white bg-info" onClick={() => setAfterZoom(100)}>
-                                100
+                        <div>
+                            <button className="myBtn w-[120px]" onClick={() => setFill(!fill)}>
+                                {fill ? "Filled" : "Unfilled"}
                             </button>
-                        </div> */}
+                        </div>
                     </div>
 
                     <div className="mt-5">
                         <div>
                             <div className="flex justify-between mb-2 gap-x-2">
-                                <input value={xAxis} onChange={(e) => setXAxis(Number(e.target.value))} type="number" placeholder="X" className="border text-black outline-none px-2 h-10 rounded-sm w-full bg-white" />
-                                <input value={yAxis} onChange={(e) => setYAxis(Number(e.target.value))} type="number" placeholder="Y" className="border text-black outline-none px-2 h-10 rounded-sm w-full bg-white" />
+                                <input value={xAxis} onChange={(e) => setXAxis(Number(e.target.value))} type="number" placeholder="X" className="border text-black outline-none px-2 h-11 rounded-sm w-full bg-white" />
+                                <input value={yAxis} onChange={(e) => setYAxis(Number(e.target.value))} type="number" placeholder="Y" className="border text-black outline-none px-2 h-11 rounded-sm w-full bg-white" />
                             </div>
                         </div>
 
-                        <div className="flex justify-evenly mt-5">
+                        <div className="flex justify-between gap-x-2 mt-5">
                             <button onClick={handleBack} className="myBtn">Back</button>
                             <button onClick={handleNewData} className="myBtn bg-[#00b6ff]">Add</button>
                         </div>
