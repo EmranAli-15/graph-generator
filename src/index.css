@@ -6,8 +6,22 @@ body {
   background-color: #537D5D;
   min-height: 100vh;
   min-width: 100vw;
-};
+}
+
+;
 
 ::-webkit-scrollbar {
   width: 0;
+}
+
+.btnLeft {
+  @apply bg-[#00b6ff] border border-[#00b6ff] flex items-center justify-center py-3 w-8 outline-none rounded-l-sm active:scale-90
+}
+
+.btnRight {
+  @apply bg-[#00b6ff] border border-[#00b6ff] flex justify-center items-center py-3 w-8 outline-none rounded-r-sm active:scale-90
+}
+
+.myBtn {
+  @apply border border-[#00b6ff] rounded-sm text-white font-bold w-[133px] py-2 px-5 active:scale-90
 }

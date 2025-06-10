@@ -114,7 +114,7 @@ const Graph = () => {
 
 
     return (
-        <div className="">
+        <div>
             <div className="flex flex-col md:flex-row justify-between gap-x-4">
 
                 {/* style={{ height: fixedH + "px", width: fixedW + "px" }} */}
@@ -184,17 +184,17 @@ const Graph = () => {
 
 
 
-                <section className="md:w-1/3 px-5">
-                    <div className="flex items-center justify-between mt-4">
+                <section className="md:w-1/3 p-5">
+                    <div className="flex items-center justify-evenly mt-5">
                         <div className="flex items-center justify-center text-white">
                             <button
-                                className="bg-orange-500 flex items-center justify-center py-2 w-6 border-r outline-none rounded-l-md active:scale-90"
+                                className="btnLeft"
                                 onClick={() => handleGraphSize(1.2)}>
                                 <BsDash />
                             </button>
-                            <span className="py-1 px-3 bg-orange-500">Graph</span>
+                            <span className="py-2 px-3 border border-[#00b6ff]">Graph</span>
                             <button
-                                className="bg-orange-500 flex justify-center items-center py-2 w-6 border-l outline-none rounded-r-md active:scale-90"
+                                className="btnRight"
                                 onClick={() => handleGraphSize(0.8)}>
                                 <BsPlusLg />
                             </button>
@@ -202,55 +202,58 @@ const Graph = () => {
 
                         <div className="flex items-center justify-center text-white">
                             <button
-                                className="bg-orange-500 flex items-center justify-center py-2 w-6 border-r outline-none rounded-l-md active:scale-90"
+                                className="btnLeft"
                                 onClick={() => setAfterZoom(afterZoom - 10)}>
                                 <BsDash />
                             </button>
-                            <span className="py-1 px-3 bg-orange-500">Zoom</span>
+                            <span className="py-2 px-3 border border-[#00b6ff]">Zoom</span>
                             <button
-                                className="bg-orange-500 flex justify-center items-center py-2 w-6 border-l outline-none rounded-r-md active:scale-90"
+                                className="btnRight"
                                 onClick={() => setAfterZoom(afterZoom + 10)}>
                                 <BsPlusLg />
                             </button>
                         </div>
+
+
+
+                        {/* Back the actual size of zoomed content */}
+                        {/* <div>
+                            <button className="text-sm font-semibold size-7 rounded-full text-center text-white bg-info" onClick={() => setAfterZoom(100)}>
+                                100
+                            </button>
+                        </div> */}
                     </div>
 
-                    <div className="flex justify-end mb-4 mr-[2px] mt-2">
-                        <button className="text-sm font-semibold size-7 rounded-full text-center text-white bg-info" onClick={() => setAfterZoom(100)}>
-                            100
-                        </button>
-                    </div>
-
-                    <div>
+                    <div className="mt-5">
                         <div>
-                            <div className="flex justify-between mb-2">
-                                <input value={xAxis} onChange={(e) => setXAxis(Number(e.target.value))} type="number" placeholder="X" className="border text-black outline-none px-2 h-10 rounded-md w-[150px] bg-gray-200" />
-                                <input value={yAxis} onChange={(e) => setYAxis(Number(e.target.value))} type="number" placeholder="Y" className="border text-black outline-none px-2 h-10 rounded-md w-[150px] bg-gray-200" />
+                            <div className="flex justify-between mb-2 gap-x-2">
+                                <input value={xAxis} onChange={(e) => setXAxis(Number(e.target.value))} type="number" placeholder="X" className="border text-black outline-none px-2 h-10 rounded-sm w-full bg-white" />
+                                <input value={yAxis} onChange={(e) => setYAxis(Number(e.target.value))} type="number" placeholder="Y" className="border text-black outline-none px-2 h-10 rounded-sm w-full bg-white" />
                             </div>
                         </div>
 
-                        <div className="flex justify-center gap-x-3">
-                            <button onClick={handleBack} className="btn btn-sm text-white border-0 bg-orange-500">Back</button>
-                            <button onClick={handleNewData} className="btn btn-sm text-white border-0 btn-info">Add</button>
+                        <div className="flex justify-evenly mt-5">
+                            <button onClick={handleBack} className="myBtn">Back</button>
+                            <button onClick={handleNewData} className="myBtn bg-[#00b6ff]">Add</button>
                         </div>
                     </div>
 
 
-                    <div className="mt-8">
-                        <div className="text-center text-gray-500">
+                    <div className="mt-10">
+                        <div className="text-center text-white">
                             <em>each square 10 unit</em>
                         </div>
                         <table className="w-full">
                             <tbody>
-                                <tr className="flex justify-between text-orange-500">
+                                <tr className="flex justify-between text-xl text-[#00b6ff]">
                                     <th className="border w-full">X</th>
                                     <th className="border w-full">Y</th>
                                 </tr>
                                 {
                                     myData.map((obj, index) => {
-                                        return <tr key={index} className={`${index & 1 && "bg-slate-100"} flex justify-between`}>
-                                            <td className="border w-full px-2 text-green-600 font-semibold">{obj.x}</td>
-                                            <td className="border w-full px-2 text-green-600 font-semibold">{-(obj.y)}</td>
+                                        return <tr key={index} className={`${index & 1 && "bg-[#00b6ff]"} flex justify-between`}>
+                                            <td className="border border-t-0 w-full px-2 text-xl text-white font-semibold">{obj.x}</td>
+                                            <td className="border border-t-0 w-full px-2 text-xl text-white font-semibold">{-(obj.y)}</td>
                                         </tr>
                                     })
                                 }
