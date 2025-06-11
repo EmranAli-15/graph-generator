@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { BsDash, BsPlusLg } from "react-icons/bs";
+import AiAssistant from "./AiAssistant";
 
 
 const Graph = () => {
@@ -21,14 +22,7 @@ const Graph = () => {
     ])
 
     const [viewBox, setViewBox] = useState({ x: 0, y: 0, width: graphWidth, height: graphHeight });
-    const [dots, setDots] = useState([
-        { x: 0 * 4, y: -0 * 4 },
-        { x: 10 * 4, y: -20 * 4 },
-        { x: 20 * 4, y: -30 * 4 },
-        { x: 40 * 4, y: -35 * 4 },
-        { x: 60 * 4, y: -35 * 4 },
-        { x: 70 * 4, y: -30 * 4 },
-    ]);
+    const [dots, setDots] = useState([]);
 
     const centerX = graphWidth / 2;
     const centerY = graphHeight / 2;
@@ -36,9 +30,6 @@ const Graph = () => {
     const points = dots
         .map(point => `${point.x + centerX},${point.y + centerY}`)
         .join(" ");
-
-
-
 
 
 
@@ -217,7 +208,7 @@ const Graph = () => {
 
 
                         <div>
-                            <button className="myBtn w-[120px]" onClick={() => setFill(!fill)}>
+                            <button className={`${fill && 'bg-[#00000060]'} myBtn w-[120px]`} onClick={() => setFill(!fill)}>
                                 {fill ? "Filled" : "Unfilled"}
                             </button>
                         </div>
@@ -237,6 +228,11 @@ const Graph = () => {
                         </div>
                     </div>
 
+                    {/* Ai part */}
+                    <div className="my-5">
+                        <AiAssistant setDots={setDots}></AiAssistant>
+                    </div>
+
 
                     <div className="mt-10">
                         <div className="text-center text-white">
@@ -250,7 +246,7 @@ const Graph = () => {
                                 </tr>
                                 {
                                     myData.map((obj, index) => {
-                                        return <tr key={index} className={`${index & 1 && "bg-[#00b6ff]"} flex justify-between`}>
+                                        return <tr key={index} className={`${index & 1 && "bg-[#00000060]"} flex justify-between`}>
                                             <td className="border border-t-0 w-full px-2 text-xl text-white font-semibold">{obj.x}</td>
                                             <td className="border border-t-0 w-full px-2 text-xl text-white font-semibold">{-(obj.y)}</td>
                                         </tr>
