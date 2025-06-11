@@ -6,4 +6,4 @@
 React, TailwindCSS, SVG
 
 ### Features
-You can increase the graph size infinity times. If you insert any wrong data then it can be remove. Also you can zoom in and out of it. Yes! it's responsive site.
+A 2D graph generator site. By providing the value of x & y the graph will generate and also you can provide an equation ```AI will solve it and you will see a graph.``` I used here ```GEMINI``` api.
