@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 
 export default function AiAssistant({ setDots }) {
 
-    const [equation, setEquation] = useState("");
+    const [equation, setEquation] = useState("y = x + 4");
     const [resData, setData] = useState([]);
     const [loading, setLoading] = useState(false);
 
@@ -11,15 +11,13 @@ export default function AiAssistant({ setDots }) {
 
         setLoading(true);
 
-        fetch(`https://graphgenerator-server.vercel.app/ai/${equation}`, {
+        fetch(`http://localhost:5000/ai/${equation}`, {
             method: "POST",
             headers: { "content-type": "application/json; charset=UTF-8" }
         })
             .then(res => res.json())
             .then(data => {
-                const rawText = data.candidates[0].content.parts[0].text;
-                const jsonText = rawText.replace(/```json|```/g, '').trim();
-                setData(JSON.parse(jsonText));
+                setData(data);
                 setLoading(false);
             })
             .catch(error => {
