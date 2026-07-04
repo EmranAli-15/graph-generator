@@ -11,7 +11,7 @@ export default function AiAssistant({ setDots }) {
 
         setLoading(true);
 
-        fetch(`http://localhost:5000/ai/${equation}`, {
+        fetch(`https://graphgenerator-server.vercel.app/ai/${equation}`, {
             method: "POST",
             headers: { "content-type": "application/json; charset=UTF-8" }
         })
